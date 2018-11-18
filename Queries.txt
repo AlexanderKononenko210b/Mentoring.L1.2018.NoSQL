@@ -1,0 +1,17 @@
+1. Insert books.
+
+use BookDb
+
+try {
+db.books.insertMany([
+{"_id":1,"name":"Hobbit","author":"Tolkien","count":5,"genre":["fantasy"],"year":2014},
+{"_id":2,"name":"Lord of the rings","autor":"Tolkien","count":3,"genre":["fantasy"],"year":2015},
+{"_id":3,"name":"Kolobok","author":"","count":10,"genre":["kids"],"year":2000},
+{"_id":4,"name":"Repka","author":"","count":11,"genre":["kids"],"year":2000},
+{"_id":5,"name":"Dyadya Stiopa","author":"Mihalkov","count":1,"genre":["kids"],"year":2001}
+]);
+} catch (e) {
+print (e);
+}
+
+
