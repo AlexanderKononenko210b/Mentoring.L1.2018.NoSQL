@@ -14,4 +14,12 @@ db.books.insertMany([
 print (e);
 }
 
+2. Find books.
+
+db.books.find({count: {$gt: 1}}, {_id: 0, name: 1})
+.sort({name: 1})
+.limit(10)
+.count();
+
+
 
