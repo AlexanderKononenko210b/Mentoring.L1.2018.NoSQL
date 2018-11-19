@@ -31,4 +31,10 @@ db.books.find({count: {$gte: 1}}, {_id: 0, name: 1, count: 1}).sort({count: -1})
 db.books.distinct("author",{author: {$ne: ""}}, {_id: 0, author: 1});
 [ "Tolkien", "Mihalkov" ]
 
+5. Find books without authors.
+db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
+{ "_id" : 3, "author" : "" }
+{ "_id" : 4, "author" : "" }
+
+
 
