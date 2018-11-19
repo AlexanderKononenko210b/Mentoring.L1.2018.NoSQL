@@ -1,83 +1,88 @@
 1. Insert books.
+	use BookDb
 
-use BookDb
+	> try {
+	... db.books.insertMany([
+	... {"_id":1,"name":"Hobbit","author":"Tolkien","count":5,"genre":["fantasy"],"year":2014},
+	... {"_id":2,"name":"Lord of the rings","autor":"Tolkien","count":3,"genre":["fantasy"],"year":2015},
+	... {"_id":3,"name":"Kolobok","author":"","count":10,"genre":["kids"],"year":2000},
+	... {"_id":4,"name":"Repka","author":"","count":11,"genre":["kids"],"year":2000},
+	... {"_id":5,"name":"Dyadya Stiopa","author":"Mihalkov","count":1,"genre":["kids"],"year":2001}
+	... ]);
+	... } catch (e) {
+	... print (e);
+	... }
+	{ "acknowledged" : true, "insertedIds" : [ 1, 2, 3, 4, 5 ] }
 
-try {
-db.books.insertMany([
-{"_id":1,"name":"Hobbit","author":"Tolkien","count":5,"genre":["fantasy"],"year":2014},
-{"_id":2,"name":"Lord of the rings","autor":"Tolkien","count":3,"genre":["fantasy"],"year":2015},
-{"_id":3,"name":"Kolobok","author":"","count":10,"genre":["kids"],"year":2000},
-{"_id":4,"name":"Repka","author":"","count":11,"genre":["kids"],"year":2000},
-{"_id":5,"name":"Dyadya Stiopa","author":"Mihalkov","count":1,"genre":["kids"],"year":2001}
-]);
-} catch (e) {
-print (e);
-}
+	> db.books.find()
+	{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 5, "genre" : [ "fantasy" ], "year" : 2014 }
+	{ "_id" : 2, "name" : "Lord of the rings", "autor" : "Tolkien", "count" : 3, "genre" : [ "fantasy" ], "year" : 2015 }
+	{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 1, "genre" : [ "kids" ], "year" : 2001 }
 
 2. Find books.
-
-db.books.find({count: {$gt: 1}}, {_id: 0, name: 1})
-.sort({name: 1})
-.limit(10)
-.count();
+	>db.books.find({count: {$gt: 1}}, {_id: 0, name: 1})
+	.sort({name: 1})
+	.limit(10)
+	.count();
 
 3. Find a book with min/max count.
-3.1 Book with min count:
-db.books.find({count: {$gte: 1}}, {_id: 0, name: 1, count: 1}).sort({count: 1}).limit(1);
-3.2 Book with max count:
-db.books.find({count: {$gte: 1}}, {_id: 0, name: 1, count: 1}).sort({count: -1}).limit(1);
+	3.1 Book with min count:
+	> db.books.find({count: {$gte: 1}}, {_id: 0, name: 1, count: 1}).sort({count: 1}).limit(1);
+	{ "name" : "Dyadya Stiopa", "count" : 1 }
+
+	3.2 Book with max count:
+	> db.books.find({count: {$gte: 1}}, {_id: 0, name: 1, count: 1}).sort({count: -1}).limit(1);
+	{ "name" : "Repka", "count" : 11 }
 
 4. Find authors.
-db.books.distinct("author",{author: {$ne: ""}}, {_id: 0, author: 1});
-[ "Tolkien", "Mihalkov" ]
+	db.books.distinct("author",{author: {$ne: ""}}, {_id: 0, author: 1});
+	[ "Tolkien", "Mihalkov" ]
 
 5. Find books without authors.
-db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
-{ "_id" : 3, "author" : "" }
-{ "_id" : 4, "author" : "" }
+	db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
+	{ "_id" : 3, "author" : "" }
+	{ "_id" : 4, "author" : "" }
 
 6. Increase the number of books by 1.
-> db.books.find()
-{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 5, "genre" : [ "fantasy" ], "year" : 2014 }
-{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 3, "genre" : [ "fantasy" ], "year" : 2015 }
-{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 1, "genre" : [ "kids" ], "year" : 2001 }
+	> db.books.updateMany({_id: { $ne : 0 }}, { $inc: { count: 1 } });
+	{ "acknowledged" : true, "matchedCount" : 5, "modifiedCount" : 5 }
 
-> db.books.updateMany({_id: { $ne : 0 }}, { $inc: { count: 1 } });
-{ "acknowledged" : true, "matchedCount" : 5, "modifiedCount" : 5 }
-
-> db.books.find()
-{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy" ], "year" : 2014 }
-{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy" ], "year" : 2015 }
-{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
+	> db.books.find()
+	{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy" ], "year" : 2014 }
+	{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy" ], "year" : 2015 }
+	{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
 
 7. Add an additional genre of “favority” to all books with the genre of “fantasy”.
-> db.books.updateMany({ genre: { $elemMatch: { $eq: "fantasy"} } }, { $addToSet: { genre: "favority" } });
-{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
-> db.books.find()
-{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy", "favority" ], "year" : 2014 }
-{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy", "favority" ], "year" : 2015 }
-{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
+	> db.books.updateMany({ genre: { $elemMatch: { $eq: "fantasy"} } }, { $addToSet: { genre: "favority" } });
+	{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+
+	> db.books.find()
+	{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy", "favority" ], "year" : 2014 }
+	{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy", "favority" ], "year" : 2015 }
+	{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
 
 8. Delete books with less than three copies.
-> db.books.deleteMany({ count: { $lt: 3 } });
-{ "acknowledged" : true, "deletedCount" : 1 }
-> db.books.find()
-{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy", "favority" ], "year" : 2014 }
-{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy", "favority" ], "year" : 2015 }
-{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
-{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
+	> db.books.deleteMany({ count: { $lt: 3 } });
+	{ "acknowledged" : true, "deletedCount" : 1 }
+
+	> db.books.find()
+	{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy", "favority" ], "year" : 2014 }
+	{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy", "favority" ], "year" : 2015 }
+	{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
+	{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
 
 9. Delete all documents.
-> db.books.deleteMany({});
-{ "acknowledged" : true, "deletedCount" : 4 }
-> db.books.find()
->
+	> db.books.deleteMany({});
+	{ "acknowledged" : true, "deletedCount" : 4 }
+
+	> db.books.find()
+	>
 
 
 
