@@ -73,5 +73,11 @@ db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
 { "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
 { "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
 
+9. Delete all documents.
+> db.books.deleteMany({});
+{ "acknowledged" : true, "deletedCount" : 4 }
+> db.books.find()
+>
+
 
 
