@@ -54,5 +54,15 @@ db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
 { "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
 { "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
 
+7. Add an additional genre of “favority” to all books with the genre of “fantasy”.
+> db.books.updateMany({ genre: { $elemMatch: { $eq: "fantasy"} } }, { $addToSet: { genre: "favority" } });
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+> db.books.find()
+{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy", "favority" ], "year" : 2014 }
+{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy", "favority" ], "year" : 2015 }
+{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
+
 
 
