@@ -36,5 +36,23 @@ db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
 { "_id" : 3, "author" : "" }
 { "_id" : 4, "author" : "" }
 
+6. Increase the number of books by 1.
+> db.books.find()
+{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 5, "genre" : [ "fantasy" ], "year" : 2014 }
+{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 3, "genre" : [ "fantasy" ], "year" : 2015 }
+{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 10, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 1, "genre" : [ "kids" ], "year" : 2001 }
+
+> db.books.updateMany({_id: { $ne : 0 }}, { $inc: { count: 1 } });
+{ "acknowledged" : true, "matchedCount" : 5, "modifiedCount" : 5 }
+
+> db.books.find()
+{ "_id" : 1, "name" : "Hobbit", "author" : "Tolkien", "count" : 6, "genre" : [ "fantasy" ], "year" : 2014 }
+{ "_id" : 2, "name" : "Lord of the rings", "author" : "Tolkien", "count" : 4, "genre" : [ "fantasy" ], "year" : 2015 }
+{ "_id" : 3, "name" : "Kolobok", "author" : "", "count" : 11, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 4, "name" : "Repka", "author" : "", "count" : 12, "genre" : [ "kids" ], "year" : 2000 }
+{ "_id" : 5, "name" : "Dyadya Stiopa", "author" : "Mihalkov", "count" : 2, "genre" : [ "kids" ], "year" : 2001 }
+
 
 
