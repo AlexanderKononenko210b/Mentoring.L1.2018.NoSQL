@@ -24,7 +24,7 @@
 2. Find books.
 	>db.books.find({count: {$gt: 1}}, {_id: 0, name: 1})
 	.sort({name: 1})
-	.limit(10)
+	.limit(3)
 	.count();
 
 3. Find a book with min/max count.
@@ -41,7 +41,7 @@
 	[ "Tolkien", "Mihalkov" ]
 
 5. Find books without authors.
-	db.books.find({ "author": { "$in": [ null, "" ] } }, { author: 1 });
+	db.books.find({ "author": { "$in": [ "" ] } }, { author: 1 });
 	{ "_id" : 3, "author" : "" }
 	{ "_id" : 4, "author" : "" }
 
